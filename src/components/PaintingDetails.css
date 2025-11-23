@@ -1,0 +1,136 @@
+.painting-details {
+  display: flex;
+  gap: 2.5rem;
+  padding: 2.5rem;
+}
+
+.details-image {
+  width: 45%;
+  height: auto;
+  border-radius: 2px;
+  object-fit: cover;
+  background-color: #f5f5f5;
+}
+
+.details-content {
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.details-title {
+  font-size: 1.6rem;
+  color: #1a1a1a;
+  margin: 0 0 0.75rem 0;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.details-description {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.7;
+  margin: 0 0 1.5rem 0;
+}
+
+.details-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #fafafa;
+  border-radius: 2px;
+  border: 1px solid #f0f0f0;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #999;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 1rem;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.details-footer {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 1.5rem;
+}
+
+.details-price {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.buy-button {
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  padding: 0.85rem 2.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.3px;
+}
+
+.buy-button:hover {
+  background: #333;
+}
+
+.buy-button:active {
+  background: #1a1a1a;
+}
+
+@media (max-width: 768px) {
+  .painting-details {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+
+  .details-image {
+    width: 100%;
+  }
+
+  .details-content {
+    width: 100%;
+  }
+
+  .details-title {
+    font-size: 1.5rem;
+  }
+
+  .details-info {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .details-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .buy-button {
+    width: 100%;
+  }
+}

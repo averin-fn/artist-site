@@ -1,0 +1,181 @@
+.about {
+  width: 100%;
+}
+
+.about-hero {
+  background: #fafafa;
+  color: #1a1a1a;
+  padding: 3rem 2.5rem;
+  border-radius: 2px;
+  margin-bottom: 3rem;
+  text-align: center;
+  border: 1px solid #f0f0f0;
+}
+
+.about-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-title {
+  font-size: 2.2rem;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.about-bio {
+  font-size: 1rem;
+  line-height: 1.8;
+  margin: 0 0 1rem 0;
+  color: #555;
+}
+
+.about-experience {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.about-specialization,
+.about-exhibitions,
+.about-contact {
+  margin-bottom: 3rem;
+}
+
+.about-specialization h3,
+.about-exhibitions h3,
+.about-contact h3 {
+  font-size: 1.4rem;
+  color: #1a1a1a;
+  margin: 0 0 1.5rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.specialization-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.specialization-list li {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 2px;
+  border-left: 3px solid #1a1a1a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+  border: 1px solid #f0f0f0;
+  border-left: 3px solid #1a1a1a;
+}
+
+.exhibitions-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.exhibition-item {
+  background: white;
+  padding: 1.75rem;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+}
+
+.exhibition-item h4 {
+  font-size: 1.1rem;
+  color: #1a1a1a;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.exhibition-year {
+  color: #888;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.exhibition-description {
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.contact-info {
+  background: white;
+  padding: 1.75rem;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+}
+
+.contact-info p {
+  font-size: 0.95rem;
+  margin: 1rem 0;
+  color: #333;
+}
+
+.contact-info p strong {
+  color: #1a1a1a;
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.contact-info a {
+  color: #1a1a1a;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+  border-bottom: 1px solid #ddd;
+}
+
+.contact-info a:hover {
+  color: #666;
+  border-bottom-color: #888;
+}
+
+@media (max-width: 768px) {
+  .about-hero {
+    padding: 2rem 1rem;
+  }
+
+  .about-title {
+    font-size: 1.8rem;
+  }
+
+  .about-specialization h3,
+  .about-exhibitions h3,
+  .about-contact h3 {
+    font-size: 1.3rem;
+  }
+
+  .specialization-list {
+    grid-template-columns: 1fr;
+  }
+
+  .exhibitions-list {
+    grid-template-columns: 1fr;
+  }
+
+  .exhibition-item,
+  .contact-info {
+    padding: 1.5rem;
+  }
+}

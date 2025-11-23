@@ -10,25 +10,34 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff;
+  color: #1a1a1a;
 }
 
 .app {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.app-footer {
+  background-color: #fafafa;
+  color: #666;
   text-align: center;
+  padding: 2rem;
+  margin-top: 0;
+  border-top: 1px solid #f0f0f0;
+  font-size: 0.9rem;
 }
 
-header {
-  margin-bottom: 2rem;
-}
-
-h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-main {
-  font-size: 1.25rem;
+.app-footer p {
+  margin: 0;
 }
