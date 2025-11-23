@@ -5,8 +5,9 @@ module.exports = {
   entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: 'bundle.[contenthash].js',
     clean: true,
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -28,10 +29,15 @@ module.exports = {
     port: 3000,
     hot: true,
     open: true,
+    historyApiFallback: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+      },
     }),
   ],
 };
