@@ -1,15 +1,20 @@
 {
   "title": "Галерея",
   "description": "Коллекция моих работ",
-  "categories": ["Все", "Новые", "Избранное"],
+  "categories": ["Все", "Картины", "Этюды", "Миниатюры", "Керамика"],
   "items": [
     {
       "id": 1,
       "title": "Закат над морем",
       "description": "Масло на холсте. Размер: 80x60 см. Написано в летнем свете, передающем все краски заката.",
       "image": "https://www.arts-dnevnik.ru/wp-content/uploads/2020/09/33D4C703-4705-4F47-B900-3530E21436DD.jpeg",
+      "images": [
+        "https://www.arts-dnevnik.ru/wp-content/uploads/2020/09/33D4C703-4705-4F47-B900-3530E21436DD.jpeg",
+        "https://cp14.nevsepic.com.ua/209/20871/1385259662-klever-iuliiy---zakat-solnca-zimoiy2-winter-sunset-2.jpg",
+        "https://4.bp.blogspot.com/_zIfUbaWUXAk/S9bCbrjV4XI/AAAAAAAABks/QW9woi1kjyM/s1600/DSC03357.jpg"
+      ],
       "price": 25000,
-      "category": "Новые",
+      "category": "Картины",
       "year": 2024,
       "medium": "Масло на холсте",
       "size": "80x60 см"
@@ -19,8 +24,11 @@
       "title": "Лесной пейзаж",
       "description": "Акварель. Размер: 50x70 см. Спокойный лес, наполненный мистикой и тишиной.",
       "image": "https://cp14.nevsepic.com.ua/209/20871/1385259662-klever-iuliiy---zakat-solnca-zimoiy2-winter-sunset-2.jpg",
+      "images": [
+        "https://cp14.nevsepic.com.ua/209/20871/1385259662-klever-iuliiy---zakat-solnca-zimoiy2-winter-sunset-2.jpg"
+      ],
       "price": 15000,
-      "category": "Избранное",
+      "category": "Картины",
       "year": 2023,
       "medium": "Акварель",
       "size": "50x70 см"
@@ -30,8 +38,12 @@
       "title": "Портрет",
       "description": "Углевой рисунок. Размер: 40x50 см. Глубокий взгляд, полный эмоций и истории.",
       "image": "https://4.bp.blogspot.com/_zIfUbaWUXAk/S9bCbrjV4XI/AAAAAAAABks/QW9woi1kjyM/s1600/DSC03357.jpg",
+      "images": [
+        "https://4.bp.blogspot.com/_zIfUbaWUXAk/S9bCbrjV4XI/AAAAAAAABks/QW9woi1kjyM/s1600/DSC03357.jpg",
+        "https://www.arts-dnevnik.ru/wp-content/uploads/2020/09/33D4C703-4705-4F47-B900-3530E21436DD.jpeg"
+      ],
       "price": 12000,
-      "category": "Новые",
+      "category": "Картины",
       "year": 2024,
       "medium": "Уголь",
       "size": "40x50 см"

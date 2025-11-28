@@ -10,6 +10,7 @@ interface Painting {
   title: string;
   description: string;
   image: string;
+  images?: string[];
   price: number;
   category: string;
   year: number;
@@ -31,6 +32,25 @@ const Gallery: React.FC = () => {
     if (painting) {
       setSelectedPainting(painting);
     }
+  };
+
+  const handleNextPainting = () => {
+    if (!selectedPainting) return;
+    const currentIndex = generalData.items.findIndex(
+      (item) => item.id === selectedPainting.id
+    );
+    const nextIndex = (currentIndex + 1) % generalData.items.length;
+    setSelectedPainting(generalData.items[nextIndex]);
+  };
+
+  const handlePreviousPainting = () => {
+    if (!selectedPainting) return;
+    const currentIndex = generalData.items.findIndex(
+      (item) => item.id === selectedPainting.id
+    );
+    const prevIndex =
+      currentIndex === 0 ? generalData.items.length - 1 : currentIndex - 1;
+    setSelectedPainting(generalData.items[prevIndex]);
   };
 
   return (
@@ -71,10 +91,19 @@ const Gallery: React.FC = () => {
             title={selectedPainting.title}
             description={selectedPainting.description}
             image={selectedPainting.image}
+            images={selectedPainting.images || [selectedPainting.image]}
             price={selectedPainting.price}
             year={selectedPainting.year}
             medium={selectedPainting.medium}
             size={selectedPainting.size}
+            onNext={handleNextPainting}
+            onPrevious={handlePreviousPainting}
+            totalCount={generalData.items.length}
+            currentIndex={
+              generalData.items.findIndex(
+                (item) => item.id === selectedPainting.id
+              ) + 1
+            }
           />
         )}
       </Modal>
