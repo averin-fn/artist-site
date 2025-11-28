@@ -47,6 +47,21 @@
       "year": 2024,
       "medium": "Уголь",
       "size": "40x50 см"
+    },
+    {
+      "id": 4,
+      "title": "Портрет",
+      "description": "Углевой рисунок. Размер: 40x50 см. Глубокий взгляд, полный эмоций и истории.",
+      "image": "https://1.bp.blogspot.com/-lpEszu0VfWs/WDr_CuxZc_I/AAAAAAAAAOQ/C85FAmuFwTYgXFkK0q0OYWuOd5WEjzzAgCLcB/s640/Cat.jpg",
+      "images": [
+        "https://1.bp.blogspot.com/-lpEszu0VfWs/WDr_CuxZc_I/AAAAAAAAAOQ/C85FAmuFwTYgXFkK0q0OYWuOd5WEjzzAgCLcB/s640/Cat.jpg",
+        "https://www.arts-dnevnik.ru/wp-content/uploads/2020/09/33D4C703-4705-4F47-B900-3530E21436DD.jpeg"
+      ],
+      "price": 12000,
+      "category": "Миниатюры",
+      "year": 2024,
+      "medium": "Уголь",
+      "size": "40x50 см"
     }
   ]
 }

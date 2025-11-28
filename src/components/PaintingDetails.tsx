@@ -107,16 +107,19 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
             onClick={onPrevious}
             aria-label="Предыдущая картина"
           >
-            ‹
+            ‹ Назад
           </button>
         )}
+        <div className="details-counter">
+          Картина {currentIndex} / {totalCount}
+        </div>
         {onNext && (
           <button
             className="details-nav-button next-button"
             onClick={onNext}
             aria-label="Следующая картина"
           >
-            ›
+            Вперед ›
           </button>
         )}
       </div>

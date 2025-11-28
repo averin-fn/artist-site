@@ -6,10 +6,17 @@ const About: React.FC = () => {
   return (
     <div className="about">
       <div className="about-hero">
-        <div className="about-content">
-          <h2 className="about-title">{aboutData.name}</h2>
-          <p className="about-bio">{aboutData.bio}</p>
-          <p className="about-experience">{aboutData.experience}</p>
+        <div className="about-hero-container">
+          {aboutData.image && (
+            <div className="about-image">
+              <img src={aboutData.image} alt={aboutData.name} />
+            </div>
+          )}
+          <div className="about-content">
+            <h2 className="about-title">{aboutData.name}</h2>
+            <p className="about-bio">{aboutData.bio}</p>
+            <p className="about-experience">{aboutData.experience}</p>
+          </div>
         </div>
       </div>
 
