@@ -31,6 +31,12 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
   currentIndex,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [scale, setScale] = useState(1);
+  const [panX, setPanX] = useState(0);
+  const [panY, setPanY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   const handleNextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
@@ -46,6 +52,50 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
     setCurrentImageIndex(index);
   };
 
+  const toggleZoom = () => {
+    setIsZoomed(!isZoomed);
+    setScale(1);
+    setPanX(0);
+    setPanY(0);
+  };
+
+  const handleZoomIn = () => {
+    setScale((prev) => Math.min(prev + 0.5, 3));
+  };
+
+  const handleZoomOut = () => {
+    setScale((prev) => Math.max(prev - 0.5, 1));
+    if (scale - 0.5 <= 1) {
+      setPanX(0);
+      setPanY(0);
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (scale > 1) {
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX - panX,
+        y: e.clientY - panY,
+      });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (!isDragging || scale <= 1) return;
+
+    const moveX = e.clientX - dragStart.x;
+    const moveY = e.clientY - dragStart.y;
+
+    const maxPan = (scale - 1) * 150;
+    setPanX(Math.max(-maxPan, Math.min(maxPan, moveX)));
+    setPanY(Math.max(-maxPan, Math.min(maxPan, moveY)));
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
   return (
     <div className="painting-details">
       <div className="image-section">
@@ -55,6 +105,14 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
             alt={`${title} - изображение ${currentImageIndex + 1}`}
             className="details-image"
           />
+          <button
+            className="zoom-button"
+            onClick={toggleZoom}
+            aria-label="Увеличить изображение"
+            title="Увеличить"
+          >
+            Увеличить
+          </button>
         </div>
 
         {images.length > 1 && (
@@ -74,6 +132,54 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
           </div>
         )}
       </div>
+
+      {isZoomed && (
+        <div className="zoom-overlay" onClick={() => setIsZoomed(false)}>
+          <div className="zoom-container" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="zoom-close"
+              onClick={() => setIsZoomed(false)}
+              aria-label="Закрыть"
+            >
+              ✕
+            </button>
+            <div className="zoom-controls">
+              <button
+                className="zoom-control-button"
+                onClick={handleZoomOut}
+                disabled={scale <= 1}
+                aria-label="Уменьшить"
+                title="Уменьшить (−)"
+              >
+                −
+              </button>
+              <span className="zoom-level">{Math.round(scale * 100)}%</span>
+              <button
+                className="zoom-control-button"
+                onClick={handleZoomIn}
+                disabled={scale >= 3}
+                aria-label="Увеличить"
+                title="Увеличить (+)"
+              >
+                +
+              </button>
+            </div>
+            <img
+              src={images[currentImageIndex]}
+              alt={`${title} - увеличено`}
+              className="zoom-image"
+              style={{
+                transform: `scale(${scale}) translate(${panX}px, ${panY}px)`,
+                cursor: scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'auto',
+              }}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+            />
+          </div>
+        </div>
+      )}
 
       <div className="details-content">
         <h2 className="details-title">{title}</h2>
