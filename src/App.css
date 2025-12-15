@@ -41,3 +41,14 @@ body {
 .app-footer p {
   margin: 0;
 }
+
+@media (max-width: 480px) {
+  .app-content {
+    padding: 1.5rem 1rem;
+  }
+
+  .app-footer {
+    padding: 1.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}

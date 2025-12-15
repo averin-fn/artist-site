@@ -59,3 +59,22 @@
   color: #1a1a1a;
   margin: 0;
 }
+
+@media (max-width: 480px) {
+  .painting-image-container {
+    height: 240px;
+  }
+
+  .painting-info {
+    padding: 1rem;
+  }
+
+  .painting-title {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .painting-price {
+    font-size: 1.05rem;
+  }
+}

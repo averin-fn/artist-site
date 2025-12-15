@@ -100,6 +100,35 @@
 }
 
 @media (max-width: 480px) {
+  .gallery-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .gallery-header h2 {
+    font-size: 1.35rem;
+  }
+
+  .gallery-header p {
+    font-size: 0.85rem;
+  }
+
+  .category-filter {
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .category-btn {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  .paintings-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
   .paintings-grid {
     grid-template-columns: 1fr;
   }
