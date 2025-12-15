@@ -3,14 +3,14 @@ import PaintingCard from '../components/PaintingCard';
 import Modal from '../components/Modal';
 import PaintingDetails from '../components/PaintingDetails';
 import generalData from '../config/general.json';
+import { getImagePath } from '../utils/imageLoader';
 import './Gallery.css';
 
 interface Painting {
   id: number;
   title: string;
   description: string;
-  image: string;
-  images?: string[];
+  images: string[];
   price: number;
   category: string;
   year: number;
@@ -27,10 +27,15 @@ const Gallery: React.FC = () => {
       ? generalData.items
       : generalData.items.filter((item) => item.category === selectedCategory);
 
+  const getProcessedPainting = (painting: any): Painting => ({
+    ...painting,
+    images: painting.images.map((img: string) => getImagePath(img)),
+  });
+
   const handleCardClick = (id: number) => {
     const painting = generalData.items.find((item) => item.id === id);
     if (painting) {
-      setSelectedPainting(painting);
+      setSelectedPainting(getProcessedPainting(painting));
     }
   };
 
@@ -40,7 +45,7 @@ const Gallery: React.FC = () => {
       (item) => item.id === selectedPainting.id
     );
     const nextIndex = (currentIndex + 1) % generalData.items.length;
-    setSelectedPainting(generalData.items[nextIndex]);
+    setSelectedPainting(getProcessedPainting(generalData.items[nextIndex]));
   };
 
   const handlePreviousPainting = () => {
@@ -50,7 +55,7 @@ const Gallery: React.FC = () => {
     );
     const prevIndex =
       currentIndex === 0 ? generalData.items.length - 1 : currentIndex - 1;
-    setSelectedPainting(generalData.items[prevIndex]);
+    setSelectedPainting(getProcessedPainting(generalData.items[prevIndex]));
   };
 
   return (
@@ -76,7 +81,10 @@ const Gallery: React.FC = () => {
         {filteredPaintings.map((painting) => (
           <PaintingCard
             key={painting.id}
-            painting={painting}
+            painting={{
+              ...painting,
+              image: getImagePath(painting.images[0]),
+            }}
             onClick={handleCardClick}
           />
         ))}
@@ -90,8 +98,7 @@ const Gallery: React.FC = () => {
           <PaintingDetails
             title={selectedPainting.title}
             description={selectedPainting.description}
-            image={selectedPainting.image}
-            images={selectedPainting.images || [selectedPainting.image]}
+            images={selectedPainting.images}
             price={selectedPainting.price}
             year={selectedPainting.year}
             medium={selectedPainting.medium}

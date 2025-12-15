@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import ImageWithLoader from './ImageWithLoader';
 import './PaintingDetails.css';
 
 interface PaintingDetailsProps {
   title: string;
   description: string;
-  image: string;
-  images?: string[];
+  images: string[];
   price: number;
   year: number;
   medium: string;
@@ -19,8 +19,7 @@ interface PaintingDetailsProps {
 const PaintingDetails: React.FC<PaintingDetailsProps> = ({
   title,
   description,
-  image,
-  images = [image],
+  images,
   price,
   year,
   medium,
@@ -36,71 +35,105 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
   const [panX, setPanX] = useState(0);
   const [panY, setPanY] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const dragStartRef = useRef({ x: 0, y: 0 });
+  const panRef = useRef({ x: 0, y: 0 });
+  const animationFrameRef = useRef<number | null>(null);
 
-  const handleNextImage = () => {
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [currentIndex, title]);
+
+  const handleNextImage = useCallback(() => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
-  };
+  }, [images.length]);
 
-  const handlePrevImage = () => {
+  const handlePrevImage = useCallback(() => {
     setCurrentImageIndex((prev) =>
       prev === 0 ? images.length - 1 : prev - 1
     );
-  };
+  }, [images.length]);
 
-  const handleSelectImage = (index: number) => {
+  const handleSelectImage = useCallback((index: number) => {
     setCurrentImageIndex(index);
-  };
+  }, []);
 
-  const toggleZoom = () => {
-    setIsZoomed(!isZoomed);
+  const toggleZoom = useCallback(() => {
+    setIsZoomed((prev) => !prev);
     setScale(1);
     setPanX(0);
     setPanY(0);
-  };
+    panRef.current = { x: 0, y: 0 };
+  }, []);
 
-  const handleZoomIn = () => {
+  const handleZoomIn = useCallback(() => {
     setScale((prev) => Math.min(prev + 0.5, 3));
-  };
+  }, []);
 
-  const handleZoomOut = () => {
-    setScale((prev) => Math.max(prev - 0.5, 1));
-    if (scale - 0.5 <= 1) {
-      setPanX(0);
-      setPanY(0);
-    }
-  };
+  const handleZoomOut = useCallback(() => {
+    setScale((prev) => {
+      const newScale = Math.max(prev - 0.5, 1);
+      if (newScale <= 1) {
+        setPanX(0);
+        setPanY(0);
+        panRef.current = { x: 0, y: 0 };
+      }
+      return newScale;
+    });
+  }, []);
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLImageElement>) => {
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLImageElement>) => {
     if (scale > 1) {
       setIsDragging(true);
-      setDragStart({
-        x: e.clientX - panX,
-        y: e.clientY - panY,
-      });
+      dragStartRef.current = {
+        x: e.clientX - panRef.current.x,
+        y: e.clientY - panRef.current.y,
+      };
+      e.preventDefault();
     }
-  };
+  }, [scale]);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLImageElement>) => {
     if (!isDragging || scale <= 1) return;
 
-    const moveX = e.clientX - dragStart.x;
-    const moveY = e.clientY - dragStart.y;
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
 
-    const maxPan = (scale - 1) * 150;
-    setPanX(Math.max(-maxPan, Math.min(maxPan, moveX)));
-    setPanY(Math.max(-maxPan, Math.min(maxPan, moveY)));
-  };
+    animationFrameRef.current = requestAnimationFrame(() => {
+      const moveX = e.clientX - dragStartRef.current.x;
+      const moveY = e.clientY - dragStartRef.current.y;
 
-  const handleMouseUp = () => {
+      const maxPan = (scale - 1) * 150;
+      const newPanX = Math.max(-maxPan, Math.min(maxPan, moveX));
+      const newPanY = Math.max(-maxPan, Math.min(maxPan, moveY));
+
+      panRef.current = { x: newPanX, y: newPanY };
+      setPanX(newPanX);
+      setPanY(newPanY);
+    });
+  }, [isDragging, scale]);
+
+  const handleMouseUp = useCallback(() => {
     setIsDragging(false);
-  };
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="painting-details">
       <div className="image-section">
         <div className="details-image-wrapper">
-          <img
+          <ImageWithLoader
             src={images[currentImageIndex]}
             alt={`${title} - изображение ${currentImageIndex + 1}`}
             className="details-image"
@@ -126,7 +159,7 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
                 onClick={() => handleSelectImage(index)}
                 aria-label={`Изображение ${index + 1}`}
               >
-                <img src={img} alt={`Превью ${index + 1}`} />
+                <ImageWithLoader src={img} alt={`Превью ${index + 1}`} />
               </button>
             ))}
           </div>
@@ -164,7 +197,7 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
                 +
               </button>
             </div>
-            <img
+            <ImageWithLoader
               src={images[currentImageIndex]}
               alt={`${title} - увеличено`}
               className="zoom-image"

@@ -1,222 +1,168 @@
 .about {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
 }
 
-.about-hero {
-  background: #fafafa;
+.about-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.about-header h1 {
+  font-size: 2.8rem;
+  margin: 0 0 1.5rem 0;
+  font-weight: 700;
+  letter-spacing: -0.5px;
   color: #1a1a1a;
-  padding: 3rem 2.5rem;
-  border-radius: 2px;
-  margin-bottom: 3rem;
-  border: 1px solid #f0f0f0;
 }
 
-.about-hero-container {
-  display: flex;
-  gap: 2.5rem;
-  align-items: flex-start;
-  max-width: 1000px;
+.about-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #555;
+  margin: 0;
+  max-width: 600px;
   margin: 0 auto;
 }
 
-.about-image {
-  flex: 0 0 280px;
-  width: 280px;
-  height: 280px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 1px solid #e0e0e0;
-  background: white;
-}
-
-.about-image img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.about-content {
-  flex: 1;
-  text-align: left;
-}
-
-.about-title {
-  font-size: 2.2rem;
-  margin: 0 0 1rem 0;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-.about-bio {
-  font-size: 1rem;
-  line-height: 1.8;
-  margin: 0 0 1rem 0;
-  color: #555;
-}
-
-.about-experience {
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin: 0;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.about-specialization,
-.about-exhibitions,
-.about-contact {
+.about-gallery {
   margin-bottom: 3rem;
 }
 
-.about-specialization h3,
-.about-exhibitions h3,
-.about-contact h3 {
-  font-size: 1.4rem;
-  color: #1a1a1a;
-  margin: 0 0 1.5rem 0;
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 0.75rem;
-  font-weight: 700;
-  letter-spacing: -0.3px;
-}
-
-.specialization-list {
+.gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.25rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.specialization-list li {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 2px;
-  border-left: 3px solid #1a1a1a;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  font-size: 1rem;
-  color: #333;
-  font-weight: 500;
-  border: 1px solid #f0f0f0;
-  border-left: 3px solid #1a1a1a;
-}
-
-.exhibitions-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
-.exhibition-item {
-  background: white;
-  padding: 1.75rem;
+.gallery-item {
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
   border-radius: 2px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  border: 1px solid #f0f0f0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
-.exhibition-item h4 {
-  font-size: 1.1rem;
-  color: #1a1a1a;
-  margin: 0 0 0.5rem 0;
-  font-weight: 600;
+.gallery-item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.exhibition-year {
-  color: #888;
-  font-weight: 600;
-  margin: 0 0 0.75rem 0;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.exhibition-description {
-  color: #666;
-  margin: 0;
-  line-height: 1.6;
-  font-size: 0.95rem;
-}
-
-.contact-info {
-  background: white;
-  padding: 1.75rem;
-  border-radius: 2px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  border: 1px solid #f0f0f0;
-}
-
-.contact-info p {
-  font-size: 0.95rem;
-  margin: 1rem 0;
-  color: #333;
-}
-
-.contact-info p strong {
-  color: #1a1a1a;
+.gallery-item .image-with-loader,
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
-  margin-bottom: 0.25rem;
-  font-weight: 600;
 }
 
-.contact-info a {
+.modal-image-container {
+  width: 100%;
+  height: 400px;
+  aspect-ratio: 1;
+  background-color: #f5f5f5;
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.modal-image-container .image-with-loader,
+.modal-image-container img {
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  object-fit: contain;
+  background-color: #f5f5f5;
+  display: block;
+}
+
+.modal-gallery-wrapper {
+  padding: 2.5rem 2.5rem 1.5rem 2.5rem;
+}
+
+.modal-gallery-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 0.75rem;
+}
+
+.modal-nav-button {
+  background: transparent;
   color: #1a1a1a;
-  text-decoration: none;
-  font-weight: 600;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 500;
   transition: color 0.2s ease;
-  border-bottom: 1px solid #ddd;
+  line-height: 1;
+  white-space: nowrap;
 }
 
-.contact-info a:hover {
+.modal-nav-button:hover {
   color: #666;
-  border-bottom-color: #888;
+}
+
+.modal-prev-button,
+.modal-next-button {
+  flex: 0 0 auto;
+}
+
+.modal-gallery-counter {
+  font-size: 0.85rem;
+  color: #999;
+  font-weight: 500;
+  text-align: center;
+  flex: 1;
 }
 
 @media (max-width: 768px) {
-  .about-hero {
+  .about {
     padding: 2rem 1rem;
   }
 
-  .about-hero-container {
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: center;
+  .about-header {
+    margin-bottom: 2.5rem;
   }
 
-  .about-image {
-    flex: 0 0 auto;
-    max-width: 100%;
-    width: 100%;
+  .about-header h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
   }
 
-  .about-content {
-    text-align: center;
+  .about-description {
+    font-size: 1rem;
   }
 
-  .about-title {
-    font-size: 1.8rem;
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
   }
 
-  .about-specialization h3,
-  .about-exhibitions h3,
-  .about-contact h3 {
-    font-size: 1.3rem;
+  .modal-gallery-wrapper {
+    gap: 1rem;
   }
 
-  .specialization-list {
-    grid-template-columns: 1fr;
+  .modal-image-container {
+    width: 300px;
+    height: 300px;
   }
 
-  .exhibitions-list {
-    grid-template-columns: 1fr;
-  }
-
-  .exhibition-item,
-  .contact-info {
-    padding: 1.5rem;
+  .modal-nav-button {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
   }
 }

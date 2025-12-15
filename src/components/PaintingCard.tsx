@@ -1,4 +1,5 @@
 import React from 'react';
+import ImageWithLoader from './ImageWithLoader';
 import './PaintingCard.css';
 
 interface Painting {
@@ -17,7 +18,7 @@ const PaintingCard: React.FC<PaintingCardProps> = ({ painting, onClick }) => {
   return (
     <div className="painting-card" onClick={() => onClick(painting.id)}>
       <div className="painting-image-container">
-        <img
+        <ImageWithLoader
           src={painting.image}
           alt={painting.title}
           className="painting-image"
