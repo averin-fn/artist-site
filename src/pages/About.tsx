@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Modal from '../components/Modal';
 import ImageWithLoader from '../components/ImageWithLoader';
 import aboutData from '../config/about.json';
@@ -7,30 +7,43 @@ import './About.css';
 const About: React.FC = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
-  const images = aboutData.gallery;
+  const images = useMemo(() => aboutData.gallery, []);
 
-  const handlePrevImage = () => {
-    if (selectedImageIndex === null) return;
-    setSelectedImageIndex((selectedImageIndex - 1 + images.length) % images.length);
-  };
+  const handlePrevImage = useCallback(() => {
+    setSelectedImageIndex((prev) => {
+      if (prev === null) return null;
+      return (prev - 1 + images.length) % images.length;
+    });
+  }, [images.length]);
 
-  const handleNextImage = () => {
-    if (selectedImageIndex === null) return;
-    setSelectedImageIndex((selectedImageIndex + 1) % images.length);
-  };
+  const handleNextImage = useCallback(() => {
+    setSelectedImageIndex((prev) => {
+      if (prev === null) return null;
+      return (prev + 1) % images.length;
+    });
+  }, [images.length]);
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (selectedImageIndex === null) return;
-    if (e.key === 'ArrowLeft') handlePrevImage();
-    if (e.key === 'ArrowRight') handleNextImage();
-  };
+  const handleCloseModal = useCallback(() => {
+    setSelectedImageIndex(null);
+  }, []);
+
+  const handleImageClick = useCallback((index: number) => {
+    setSelectedImageIndex(index);
+  }, []);
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedImageIndex === null) return;
+      if (e.key === 'ArrowLeft') handlePrevImage();
+      if (e.key === 'ArrowRight') handleNextImage();
+      if (e.key === 'Escape') handleCloseModal();
+    };
+
     if (selectedImageIndex !== null) {
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [selectedImageIndex]);
+  }, [selectedImageIndex, handlePrevImage, handleNextImage, handleCloseModal]);
 
   return (
     <div className="about">
@@ -45,7 +58,7 @@ const About: React.FC = () => {
             <div
               key={index}
               className="gallery-item"
-              onClick={() => setSelectedImageIndex(index)}
+              onClick={() => handleImageClick(index)}
             >
               <ImageWithLoader src={image} alt={`${aboutData.name} ${index + 1}`} />
             </div>
@@ -54,7 +67,7 @@ const About: React.FC = () => {
       </div>
 
       {selectedImageIndex !== null && (
-        <Modal isOpen={true} onClose={() => setSelectedImageIndex(null)}>
+        <Modal isOpen={true} onClose={handleCloseModal}>
           <div className="modal-gallery-wrapper">
             <div className="modal-image-container">
               <ImageWithLoader src={images[selectedImageIndex]} alt={`${aboutData.name} ${selectedImageIndex + 1}`} />

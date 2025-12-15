@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import './Header.css';
 
 interface HeaderProps {
@@ -7,6 +7,9 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange }) => {
+  const handleGalleryClick = useCallback(() => onTabChange('gallery'), [onTabChange]);
+  const handleAboutClick = useCallback(() => onTabChange('about'), [onTabChange]);
+
   return (
     <header className="header">
       <div className="header-container">
@@ -14,13 +17,13 @@ const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange }) => {
         <nav className="nav">
           <button
             className={`nav-tab ${currentTab === 'gallery' ? 'active' : ''}`}
-            onClick={() => onTabChange('gallery')}
+            onClick={handleGalleryClick}
           >
             Главная
           </button>
           <button
             className={`nav-tab ${currentTab === 'about' ? 'active' : ''}`}
-            onClick={() => onTabChange('about')}
+            onClick={handleAboutClick}
           >
             О художнике
           </button>
@@ -30,4 +33,4 @@ const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange }) => {
   );
 };
 
-export default Header;
+export default React.memo(Header);

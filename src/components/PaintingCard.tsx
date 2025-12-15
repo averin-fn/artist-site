@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import ImageWithLoader from './ImageWithLoader';
 import './PaintingCard.css';
 
@@ -15,8 +15,12 @@ interface PaintingCardProps {
 }
 
 const PaintingCard: React.FC<PaintingCardProps> = ({ painting, onClick }) => {
+  const handleClick = useCallback(() => {
+    onClick(painting.id);
+  }, [painting.id, onClick]);
+
   return (
-    <div className="painting-card" onClick={() => onClick(painting.id)}>
+    <div className="painting-card" onClick={handleClick}>
       <div className="painting-image-container">
         <ImageWithLoader
           src={painting.image}
@@ -32,4 +36,4 @@ const PaintingCard: React.FC<PaintingCardProps> = ({ painting, onClick }) => {
   );
 };
 
-export default PaintingCard;
+export default React.memo(PaintingCard);

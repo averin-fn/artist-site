@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import './ImageWithLoader.css';
 
 interface ImageWithLoaderProps {
@@ -6,6 +6,7 @@ interface ImageWithLoaderProps {
   alt: string;
   className?: string;
   style?: React.CSSProperties;
+  loading?: 'lazy' | 'eager';
   onMouseDown?: (e: React.MouseEvent<HTMLImageElement>) => void;
   onMouseMove?: (e: React.MouseEvent<HTMLImageElement>) => void;
   onMouseUp?: () => void;
@@ -17,6 +18,7 @@ const ImageWithLoader: React.FC<ImageWithLoaderProps> = ({
   alt,
   className = '',
   style,
+  loading = 'lazy',
   onMouseDown,
   onMouseMove,
   onMouseUp,
@@ -25,14 +27,14 @@ const ImageWithLoader: React.FC<ImageWithLoaderProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  const handleLoad = () => {
+  const handleLoad = useCallback(() => {
     setIsLoading(false);
-  };
+  }, []);
 
-  const handleError = () => {
+  const handleError = useCallback(() => {
     setIsLoading(false);
     setHasError(true);
-  };
+  }, []);
 
   return (
     <div className="image-with-loader">
@@ -47,6 +49,7 @@ const ImageWithLoader: React.FC<ImageWithLoaderProps> = ({
         <img
           src={src}
           alt={alt}
+          loading={loading}
           className={`${className} ${isLoading ? 'loading' : 'loaded'}`}
           style={style}
           onLoad={handleLoad}
@@ -55,10 +58,11 @@ const ImageWithLoader: React.FC<ImageWithLoaderProps> = ({
           onMouseMove={onMouseMove}
           onMouseUp={onMouseUp}
           onMouseLeave={onMouseLeave}
+          decoding="async"
         />
       )}
     </div>
   );
 };
 
-export default ImageWithLoader;
+export default React.memo(ImageWithLoader);

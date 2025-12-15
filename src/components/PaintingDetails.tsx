@@ -201,6 +201,7 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
               src={images[currentImageIndex]}
               alt={`${title} - увеличено`}
               className="zoom-image"
+              loading="eager"
               style={{
                 transform: `scale(${scale}) translate(${panX}px, ${panY}px)`,
                 cursor: scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'auto',
