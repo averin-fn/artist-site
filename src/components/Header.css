@@ -1,9 +1,26 @@
 .header {
+  position: sticky;
+  top: 0;
   background: white;
   color: #1a1a1a;
   padding: 1.5rem 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   border-bottom: 1px solid #f0f0f0;
+  z-index: 100;
+  transition: padding 0.15s ease, box-shadow 0.15s ease;
+}
+
+.header.scrolled {
+  padding: 0.75rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.header.scrolled .header-title {
+  font-size: 1.3rem;
+}
+
+.header.scrolled .nav-tab {
+  padding: 0.6rem 1rem;
 }
 
 .header-container {
@@ -22,6 +39,7 @@
   margin: 0;
   letter-spacing: -0.5px;
   color: #1a1a1a;
+  transition: font-size 0.15s ease;
 }
 
 .nav {
@@ -37,7 +55,7 @@
   font-size: 0.95rem;
   cursor: pointer;
   border-radius: 0;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   font-weight: 500;
   border-bottom: 2px solid transparent;
   position: relative;

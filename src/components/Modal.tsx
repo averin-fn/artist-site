@@ -27,12 +27,17 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       }
     };
 
+    // Сохраняем ширину скроллбара
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    
     document.addEventListener('keydown', handleEscape);
     document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
     };
   }, [isOpen, onClose]);
 

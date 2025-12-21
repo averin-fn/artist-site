@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Modal from '../components/Modal';
 import ImageWithLoader from '../components/ImageWithLoader';
 import aboutData from '../config/about.json';
+import { getImagePath } from '../utils/imageLoader';
 import './About.css';
 
 const About: React.FC = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
-  const images = useMemo(() => aboutData.gallery, []);
+  const images = useMemo(() => aboutData.gallery.map(img => getImagePath(img)), []);
 
   const handlePrevImage = useCallback(() => {
     setSelectedImageIndex((prev) => {
@@ -113,29 +115,24 @@ const About: React.FC = () => {
         <Modal isOpen={true} onClose={handleCloseModal}>
           <div className="modal-gallery-wrapper">
             <div className="modal-image-container">
-              <ImageWithLoader src={images[selectedImageIndex]} alt={`${aboutData.name} ${selectedImageIndex + 1}`} />
-            </div>
-
-            <div className="modal-gallery-controls">
               <button
-                className="modal-nav-button modal-prev-button"
+                className="modal-image-nav-button modal-prev"
                 onClick={handlePrevImage}
                 aria-label="Предыдущее изображение"
               >
-                ‹ Назад
+                <ChevronLeft size={28} />
               </button>
-
-              <div className="modal-gallery-counter">
-                Изображение {selectedImageIndex + 1} / {images.length}
-              </div>
-
+              <ImageWithLoader src={images[selectedImageIndex]} alt={`${aboutData.name} ${selectedImageIndex + 1}`} />
               <button
-                className="modal-nav-button modal-next-button"
+                className="modal-image-nav-button modal-next"
                 onClick={handleNextImage}
                 aria-label="Следующее изображение"
               >
-                Вперед ›
+                <ChevronRight size={28} />
               </button>
+              <div className="modal-image-indicator">
+                {selectedImageIndex + 1} / {images.length}
+              </div>
             </div>
           </div>
         </Modal>
