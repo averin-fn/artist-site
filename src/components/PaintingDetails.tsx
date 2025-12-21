@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { ChevronLeft, ChevronRight, Maximize2, X, Plus, Minus } from 'lucide-react';
 import ImageWithLoader from './ImageWithLoader';
 import './PaintingDetails.css';
 
@@ -42,6 +43,14 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
   useEffect(() => {
     setCurrentImageIndex(0);
   }, [currentIndex, title]);
+
+  // Сброс увеличения при переключении изображения
+  useEffect(() => {
+    setScale(1);
+    setPanX(0);
+    setPanY(0);
+    panRef.current = { x: 0, y: 0 };
+  }, [currentImageIndex]);
 
   const handleNextImage = useCallback(() => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
@@ -133,19 +142,42 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
     <div className="painting-details">
       <div className="image-section">
         <div className="details-image-wrapper">
+          {images.length > 1 && (
+            <button
+              className="image-nav-button prev-image"
+              onClick={handlePrevImage}
+              aria-label="Предыдущее изображение"
+            >
+              <ChevronLeft size={24} />
+            </button>
+          )}
           <ImageWithLoader
             src={images[currentImageIndex]}
             alt={`${title} - изображение ${currentImageIndex + 1}`}
             className="details-image"
           />
+          {images.length > 1 && (
+            <button
+              className="image-nav-button next-image"
+              onClick={handleNextImage}
+              aria-label="Следующее изображение"
+            >
+              <ChevronRight size={24} />
+            </button>
+          )}
           <button
             className="zoom-button"
             onClick={toggleZoom}
             aria-label="Увеличить изображение"
-            title="Увеличить"
+            title="Развернуть на весь экран"
           >
-            Увеличить
+            <Maximize2 size={20} />
           </button>
+          {images.length > 1 && (
+            <div className="image-counter">
+              {currentImageIndex + 1} / {images.length}
+            </div>
+          )}
         </div>
 
         {images.length > 1 && (
@@ -168,35 +200,70 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
 
       {isZoomed && (
         <div className="zoom-overlay" onClick={() => setIsZoomed(false)}>
-          <div className="zoom-container" onClick={(e) => e.stopPropagation()}>
+          <button
+            className="zoom-close"
+            onClick={() => setIsZoomed(false)}
+            aria-label="Закрыть"
+          >
+            <X size={24} />
+          </button>
+          
+          {images.length > 1 && (
+            <>
+              <button
+                className="zoom-nav-button zoom-prev"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevImage();
+                }}
+                aria-label="Предыдущее изображение"
+              >
+                <ChevronLeft size={32} />
+              </button>
+              <button
+                className="zoom-nav-button zoom-next"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNextImage();
+                }}
+                aria-label="Следующее изображение"
+              >
+                <ChevronRight size={32} />
+              </button>
+              <div className="zoom-image-counter">
+                {currentImageIndex + 1} / {images.length}
+              </div>
+            </>
+          )}
+          
+          <div className="zoom-controls">
             <button
-              className="zoom-close"
-              onClick={() => setIsZoomed(false)}
-              aria-label="Закрыть"
+              className="zoom-control-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleZoomOut();
+              }}
+              disabled={scale <= 1}
+              aria-label="Уменьшить"
+              title="Уменьшить"
             >
-              ✕
+              <Minus size={20} />
             </button>
-            <div className="zoom-controls">
-              <button
-                className="zoom-control-button"
-                onClick={handleZoomOut}
-                disabled={scale <= 1}
-                aria-label="Уменьшить"
-                title="Уменьшить (−)"
-              >
-                −
-              </button>
-              <span className="zoom-level">{Math.round(scale * 100)}%</span>
-              <button
-                className="zoom-control-button"
-                onClick={handleZoomIn}
-                disabled={scale >= 3}
-                aria-label="Увеличить"
-                title="Увеличить (+)"
-              >
-                +
-              </button>
-            </div>
+            <button
+              className="zoom-control-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleZoomIn();
+              }}
+              disabled={scale >= 3}
+              aria-label="Увеличить"
+              title="Увеличить"
+            >
+              <Plus size={20} />
+            </button>
+          </div>
+          
+          <div className="zoom-container" onClick={(e) => e.stopPropagation()}>
             <ImageWithLoader
               src={images[currentImageIndex]}
               alt={`${title} - увеличено`}
