@@ -1,0 +1,106 @@
+name: Deploy via RSYNC (Alternative)
+
+on:
+  workflow_dispatch:  # Ручной запуск
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies and build
+        run: |
+          npm ci
+          npm run build
+          cd server
+          npm ci
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Create deployment package
+        run: |
+          # Создание директории для деплоя
+          mkdir -p deploy
+          
+          # Копирование необходимых файлов
+          cp -r dist deploy/
+          cp -r server deploy/
+          cp -r public deploy/
+          
+          # Удаление ненужных файлов
+          rm -rf deploy/server/node_modules
+          rm -rf deploy/server/.env
+          rm -rf deploy/server/*.db*
+          
+          # Создание архива
+          tar -czf deploy.tar.gz -C deploy .
+
+      - name: Upload to VPS
+        run: |
+          scp -i ~/.ssh/deploy_key -P ${{ secrets.VPS_PORT || 22 }} \
+            deploy.tar.gz \
+            ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/tmp/
+
+      - name: Deploy on VPS
+        run: |
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.VPS_PORT || 22 }} \
+            ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
+            
+            # Переход в директорию
+            cd ${{ secrets.DEPLOY_PATH || '/var/www/artist-site' }}
+            
+            # Создание бэкапа
+            timestamp=$(date +%Y%m%d_%H%M%S)
+            mkdir -p backups
+            [ -f "server/artist.db" ] && cp server/artist.db backups/artist_$timestamp.db
+            
+            # Распаковка нового кода
+            tar -xzf /tmp/deploy.tar.gz -C /tmp/artist-site-new
+            
+            # Сохранение важных файлов
+            [ -f "server/.env" ] && cp server/.env /tmp/env.backup
+            [ -f "server/artist.db" ] && cp server/artist.db* /tmp/
+            
+            # Замена файлов
+            rm -rf dist server/routes server/middleware server/admin server/scripts
+            cp -r /tmp/artist-site-new/dist .
+            cp -r /tmp/artist-site-new/server/* server/
+            cp -r /tmp/artist-site-new/public/uploads public/ 2>/dev/null || true
+            
+            # Восстановление важных файлов
+            [ -f "/tmp/env.backup" ] && cp /tmp/env.backup server/.env
+            [ -f "/tmp/artist.db" ] && cp /tmp/artist.db* server/
+            
+            # Установка зависимостей backend
+            cd server
+            npm ci --production
+            
+            # Очистка временных файлов
+            rm -rf /tmp/artist-site-new /tmp/deploy.tar.gz /tmp/env.backup /tmp/artist.db*
+            
+            # Перезапуск PM2
+            pm2 restart artist-site-backend || pm2 start server.js --name artist-site-backend
+            pm2 save
+            
+            echo "Deployment completed!"
+          EOF
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f ~/.ssh/deploy_key
+          rm -rf deploy deploy.tar.gz
