@@ -40,7 +40,6 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
           script: |
-<<<<<<< HEAD
             DEPLOY_PATH="${{ secrets.DEPLOY_PATH || '/var/www/artist-site' }}"
             
             # Проверка существования директории
@@ -77,25 +76,6 @@ jobs:
             # Установка зависимостей Frontend
             echo "Installing frontend dependencies..."
             npm install --production=false
-=======
-            # Переход в директорию проекта
-            cd ${{ secrets.DEPLOY_PATH || '/var/www/artist-site' }}
-            
-            # Создание бэкапа текущей версии
-            echo "Creating backup..."
-            timestamp=$(date +%Y%m%d_%H%M%S)
-            mkdir -p backups
-            [ -d "server/artist.db" ] && cp server/artist.db backups/artist_$timestamp.db
-            
-            # Обновление кода
-            echo "Pulling latest code..."
-            git fetch origin
-            git reset --hard origin/main
-            
-            # Установка зависимостей Frontend
-            echo "Installing frontend dependencies..."
-            npm ci
->>>>>>> 68a6628852865b38b3eca3b329ef643020918ebe
             
             # Сборка Frontend
             echo "Building frontend..."
@@ -104,11 +84,7 @@ jobs:
             # Установка зависимостей Backend
             echo "Installing backend dependencies..."
             cd server
-<<<<<<< HEAD
             npm install --production
-=======
-            npm ci
->>>>>>> 68a6628852865b38b3eca3b329ef643020918ebe
             
             # Проверка и создание .env если не существует
             if [ ! -f .env ]; then
@@ -116,13 +92,8 @@ jobs:
               cat > .env << EOF
             PORT=3001
             JWT_SECRET=${{ secrets.JWT_SECRET }}
-<<<<<<< HEAD
             ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME || 'admin' }}
             ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD || 'admin123' }}
-=======
-            ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}
-            ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
->>>>>>> 68a6628852865b38b3eca3b329ef643020918ebe
             UPLOAD_PATH=../public/uploads
             NODE_ENV=production
             EOF
@@ -139,11 +110,7 @@ jobs:
             
             # Перезапуск приложения через PM2
             echo "Restarting application..."
-<<<<<<< HEAD
             cd "$DEPLOY_PATH"
-=======
-            cd ..
->>>>>>> 68a6628852865b38b3eca3b329ef643020918ebe
             
             # Остановка и удаление старого процесса если существует
             pm2 delete artist-site-backend 2>/dev/null || true
@@ -155,11 +122,7 @@ jobs:
             # Сохранение конфигурации PM2
             pm2 save
             
-<<<<<<< HEAD
             echo "✅ Deployment completed successfully!"
-=======
-            echo "Deployment completed successfully!"
->>>>>>> 68a6628852865b38b3eca3b329ef643020918ebe
             pm2 status
 
       - name: Send deployment notification

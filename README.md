@@ -120,7 +120,6 @@ npm start          # Запустит на http://localhost:3000
 - Измените пароль после первого входа!
 - База данных: `server/artist.db`
 - Загруженные изображения: `public/uploads/`
-<<<<<<< HEAD
 
 ## 🚀 Деплой на VPS
 
@@ -141,7 +140,3 @@ npm start          # Запустит на http://localhost:3000
 ### GitHub Actions Workflows
 - `.github/workflows/deploy.yml` - Основной деплой (автоматически клонирует/обновляет репозиторий)
 - `.github/workflows/deploy-rsync.yml` - Альтернативный метод через Rsync
-=======
-- **Webpack Dev Server** - Development server with HMR
-- **ts-loader** - TypeScript loader for webpack
->>>>>>> 68a6628852865b38b3eca3b329ef643020918ebe
