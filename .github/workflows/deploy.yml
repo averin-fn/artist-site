@@ -1,0 +1,135 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Install backend dependencies
+        run: |
+          cd server
+          npm ci
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            DEPLOY_PATH="${{ secrets.DEPLOY_PATH || '/var/www/artist-site' }}"
+            
+            # Проверка существования директории
+            if [ ! -d "$DEPLOY_PATH" ]; then
+              echo "Creating project directory..."
+              mkdir -p "$DEPLOY_PATH"
+              cd "$DEPLOY_PATH"
+              
+              # Первоначальное клонирование репозитория
+              echo "Cloning repository for the first time..."
+              git clone https://github.com/${{ github.repository }}.git .
+            else
+              cd "$DEPLOY_PATH"
+              
+              # Создание бэкапа текущей версии
+              echo "Creating backup..."
+              timestamp=$(date +%Y%m%d_%H%M%S)
+              mkdir -p backups
+              [ -f "server/artist.db" ] && cp server/artist.db backups/artist_$timestamp.db
+              
+              # Проверка и инициализация git репозитория
+              if [ ! -d ".git" ]; then
+                echo "Initializing git repository..."
+                git init
+                git remote add origin https://github.com/${{ github.repository }}.git
+              fi
+              
+              # Обновление кода
+              echo "Pulling latest code..."
+              git fetch origin
+              git reset --hard origin/${{ github.ref_name }}
+            fi
+            
+            # Установка зависимостей Frontend
+            echo "Installing frontend dependencies..."
+            npm install --production=false
+            
+            # Сборка Frontend
+            echo "Building frontend..."
+            npm run build
+            
+            # Установка зависимостей Backend
+            echo "Installing backend dependencies..."
+            cd server
+            npm install --production
+            
+            # Проверка и создание .env если не существует
+            if [ ! -f .env ]; then
+              echo "Creating .env file..."
+              cat > .env << EOF
+            PORT=3001
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME || 'admin' }}
+            ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD || 'admin123' }}
+            UPLOAD_PATH=../public/uploads
+            NODE_ENV=production
+            EOF
+            fi
+            
+            # Инициализация БД (если БД не существует)
+            if [ ! -f artist.db ]; then
+              echo "Initializing database..."
+              npm run init-db
+            fi
+            
+            # Создание директории для загрузок
+            mkdir -p ../public/uploads
+            
+            # Перезапуск приложения через PM2
+            echo "Restarting application..."
+            cd "$DEPLOY_PATH"
+            
+            # Остановка и удаление старого процесса если существует
+            pm2 delete artist-site-backend 2>/dev/null || true
+            
+            # Запуск backend
+            cd server
+            pm2 start server.js --name artist-site-backend --time
+            
+            # Сохранение конфигурации PM2
+            pm2 save
+            
+            echo "✅ Deployment completed successfully!"
+            pm2 status
+
+      - name: Send deployment notification
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment successful!"
+          else
+            echo "❌ Deployment failed!"
+          fi

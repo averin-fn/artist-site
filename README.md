@@ -100,7 +100,25 @@ npm start          # Запустит на http://localhost:3000
 
 - По умолчанию создается пользователь: `admin` / `admin123`
 - Измените пароль после первого входа!
-- База данных: `server/database.sqlite`
-- Загруженные изображения: `server/uploads/`
-- **Webpack Dev Server** - Development server with HMR
-- **ts-loader** - TypeScript loader for webpack
+- База данных: `server/artist.db`
+- Загруженные изображения: `public/uploads/`
+
+## 🚀 Деплой на VPS
+
+Проект настроен для автоматического деплоя через GitHub Actions.
+
+### Быстрый старт
+1. Настройте VPS (Node.js, PM2, Git)
+2. Добавьте GitHub Secrets (VPS_HOST, VPS_USERNAME, VPS_SSH_KEY, JWT_SECRET)
+3. Push в ветку `main` → автоматический деплой!
+
+### Документация
+- [📘 Пошаговая инструкция](.github/workflows/README.md)
+- [🐛 Решение ошибок](.github/TROUBLESHOOTING.md)
+- [💻 Примеры команд](.github/DEPLOY_COMMANDS.md)
+- [🔧 Конфигурация Nginx](.github/nginx.md)
+- [🏭 Production чеклист](PRODUCTION.md)
+
+### GitHub Actions Workflows
+- `.github/workflows/deploy.yml` - Основной деплой (автоматически клонирует/обновляет репозиторий)
+- `.github/workflows/deploy-rsync.yml` - Альтернативный метод через Rsync
