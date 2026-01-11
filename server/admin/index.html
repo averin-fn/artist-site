@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админ-панель - Сайт художника</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen">
+      <div class="login-container">
+        <h1>Вход в админ-панель</h1>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Имя пользователя</label>
+            <input type="text" id="username" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Войти</button>
+          <div id="loginError" class="error"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="dashboardScreen" class="screen" style="display: none;">
+      <nav class="navbar">
+        <h1>Админ-панель</h1>
+        <div class="nav-buttons">
+          <button class="btn btn-secondary" onclick="showTab('artworks')">Работы</button>
+          <button class="btn btn-secondary" onclick="showTab('about')">О художнике</button>
+          <button class="btn btn-danger" onclick="logout()">Выйти</button>
+        </div>
+      </nav>
+
+      <div class="container">
+        <!-- Artworks Tab -->
+        <div id="artworksTab" class="tab-content">
+          <div class="tab-header">
+            <h2>Управление работами</h2>
+            <button class="btn btn-primary" onclick="showArtworkModal()">Добавить работу</button>
+          </div>
+          
+          <div id="artworksList" class="artworks-grid"></div>
+        </div>
+
+        <!-- About Tab -->
+        <div id="aboutTab" class="tab-content" style="display: none;">
+          <div class="tab-header">
+            <h2>Информация о художнике</h2>
+            <button class="btn btn-primary" onclick="saveAbout()">Сохранить изменения</button>
+          </div>
+          
+          <form id="aboutForm">
+            <div class="form-group">
+              <label for="aboutTitle">Заголовок</label>
+              <input type="text" id="aboutTitle" required>
+            </div>
+            <div class="form-group">
+              <label for="aboutName">Имя художника</label>
+              <input type="text" id="aboutName" required>
+            </div>
+            <div class="form-group">
+              <label for="aboutBio">Биография</label>
+              <textarea id="aboutBio" rows="5" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="aboutExperience">Опыт</label>
+              <input type="text" id="aboutExperience" required>
+            </div>
+            <div class="form-group">
+              <label for="aboutPhone">Телефон</label>
+              <input type="tel" id="aboutPhone">
+            </div>
+            <div class="form-group">
+              <label for="aboutEmail">Email</label>
+              <input type="email" id="aboutEmail">
+            </div>
+            <div class="form-group">
+              <label for="aboutVk">VK</label>
+              <input type="url" id="aboutVk">
+            </div>
+            <div class="form-group">
+              <label for="aboutInstagram">Instagram</label>
+              <input type="url" id="aboutInstagram">
+            </div>
+            <div class="form-group">
+              <label>Галерея изображений</label>
+              <input type="file" id="aboutGalleryImages" multiple accept="image/*">
+              <div id="aboutGalleryPreview" class="image-preview"></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Artwork Modal -->
+    <div id="artworkModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle">Добавить работу</h2>
+          <span class="close" onclick="closeArtworkModal()">&times;</span>
+        </div>
+        <form id="artworkForm">
+          <input type="hidden" id="artworkId">
+          
+          <div class="form-group">
+            <label for="artworkTitle">Название *</label>
+            <input type="text" id="artworkTitle" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="artworkCategory">Категория *</label>
+            <select id="artworkCategory" required>
+              <option value="">Выберите категорию</option>
+              <option value="Картины">Картины</option>
+              <option value="Этюды">Этюды</option>
+              <option value="Миниатюры">Миниатюры</option>
+              <option value="Керамика">Керамика</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="artworkDescription">Описание</label>
+            <textarea id="artworkDescription" rows="4"></textarea>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="artworkPrice">Цена (₽)</label>
+              <input type="number" id="artworkPrice" min="0">
+            </div>
+            
+            <div class="form-group">
+              <label for="artworkYear">Год</label>
+              <input type="number" id="artworkYear" min="1900" max="2100">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="artworkMedium">Техника</label>
+              <input type="text" id="artworkMedium" placeholder="Масло на холсте">
+            </div>
+            
+            <div class="form-group">
+              <label for="artworkSize">Размер</label>
+              <input type="text" id="artworkSize" placeholder="80x60 см">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Изображения</label>
+            <input type="file" id="artworkImages" multiple accept="image/*">
+            <div id="imagePreview" class="image-preview"></div>
+            <input type="hidden" id="artworkImagePaths">
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeArtworkModal()">Отмена</button>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
