@@ -95,5 +95,6 @@
     width: 32px;
     height: 32px;
     font-size: 1.1rem;
+    z-index: 20;
   }
 }

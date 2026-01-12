@@ -81,11 +81,6 @@ const Gallery: React.FC = () => {
 
   return (
     <div className="gallery">
-      <div className="gallery-header">
-        <h2>Галерея</h2>
-        <p>Коллекция моих работ</p>
-      </div>
-
       <div className="category-filter">
         {categories.map((category) => (
           <button

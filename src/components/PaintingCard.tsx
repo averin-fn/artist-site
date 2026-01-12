@@ -6,7 +6,7 @@ interface Painting {
   id: number;
   title: string;
   image: string;
-  price: number;
+  price: number | null;
 }
 
 interface PaintingCardProps {
@@ -30,7 +30,9 @@ const PaintingCard: React.FC<PaintingCardProps> = ({ painting, onClick }) => {
       </div>
       <div className="painting-info">
         <h3 className="painting-title">{painting.title}</h3>
-        <p className="painting-price">{painting.price.toLocaleString('ru-RU')} ₽</p>
+        <p className="painting-price">
+          {painting.price ? `${painting.price.toLocaleString('ru-RU')} ₽` : 'Цена по запросу'}
+        </p>
       </div>
     </div>
   );

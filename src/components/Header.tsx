@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange }) => {
             className={`nav-tab ${currentTab === 'gallery' ? 'active' : ''}`}
             onClick={handleGalleryClick}
           >
-            Главная
+            Галерея
           </button>
           <button
             className={`nav-tab ${currentTab === 'about' ? 'active' : ''}`}

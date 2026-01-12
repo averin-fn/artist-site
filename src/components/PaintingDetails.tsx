@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Maximize2, X, Plus, Minus } from 'lucide-react';
 import ImageWithLoader from './ImageWithLoader';
+import ContactModal from './ContactModal';
 import './PaintingDetails.css';
 
 interface PaintingDetailsProps {
   title: string;
   description: string;
   images: string[];
-  price: number;
+  price: number | null;
   year: number;
   medium: string;
   size: string;
@@ -32,6 +33,7 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [scale, setScale] = useState(1);
   const [panX, setPanX] = useState(0);
   const [panY, setPanY] = useState(0);
@@ -302,8 +304,12 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
         </div>
 
         <div className="details-footer">
-          <span className="details-price">{price.toLocaleString('ru-RU')} ₽</span>
-          <button className="buy-button">Купить</button>
+          <span className="details-price">
+            {price ? `${price.toLocaleString('ru-RU')} ₽` : 'Цена по запросу'}
+          </span>
+          <button className="buy-button" onClick={() => setIsContactModalOpen(true)}>
+            Купить
+          </button>
         </div>
       </div>
 
@@ -330,6 +336,11 @@ const PaintingDetails: React.FC<PaintingDetailsProps> = ({
           </button>
         )}
       </div>
+
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={() => setIsContactModalOpen(false)} 
+      />
     </div>
   );
 };

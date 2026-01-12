@@ -61,6 +61,13 @@ module.exports = (env, argv) => {
       open: true,
       historyApiFallback: true,
       compress: true,
+      proxy: [
+        {
+          context: ['/api'],
+          target: 'http://localhost:3001',
+          changeOrigin: true,
+        },
+      ],
     },
     plugins: [
       new HtmlWebpackPlugin({

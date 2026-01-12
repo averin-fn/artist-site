@@ -1,31 +1,13 @@
 .gallery {
   width: 100%;
-}
-
-.gallery-header {
-  text-align: center;
-  margin-bottom: 2.5rem;
-}
-
-.gallery-header h2 {
-  font-size: 2rem;
-  color: #1a1a1a;
-  margin: 0 0 0.5rem 0;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-.gallery-header p {
-  font-size: 0.95rem;
-  color: #888;
-  margin: 0;
+  position: relative;
 }
 
 .category-filter {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.5rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }
 
@@ -77,6 +59,7 @@
 
   .category-filter {
     gap: 0.5rem;
+    justify-content: center;
   }
 
   .category-btn {
