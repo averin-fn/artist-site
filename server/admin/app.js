@@ -403,11 +403,69 @@ async function saveAbout() {
   }
 }
 
+// Change Password Modal
+function showChangePasswordModal() {
+  const modal = document.getElementById('changePasswordModal');
+  const form = document.getElementById('changePasswordForm');
+  form.reset();
+  document.getElementById('passwordError').textContent = '';
+  modal.style.display = 'block';
+}
+
+function closeChangePasswordModal() {
+  document.getElementById('changePasswordModal').style.display = 'none';
+}
+
+// Handle password change form
+document.getElementById('changePasswordForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const currentPassword = document.getElementById('currentPassword').value;
+  const newPassword = document.getElementById('newPassword').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  const errorEl = document.getElementById('passwordError');
+  
+  errorEl.textContent = '';
+  
+  // Валидация
+  if (newPassword.length < 6) {
+    errorEl.textContent = 'Новый пароль должен быть не менее 6 символов';
+    return;
+  }
+  
+  if (newPassword !== confirmPassword) {
+    errorEl.textContent = 'Пароли не совпадают';
+    return;
+  }
+  
+  if (currentPassword === newPassword) {
+    errorEl.textContent = 'Новый пароль должен отличаться от текущего';
+    return;
+  }
+  
+  try {
+    await apiRequest('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ currentPassword, newPassword })
+    });
+    
+    alert('Пароль успешно изменен!');
+    closeChangePasswordModal();
+  } catch (error) {
+    errorEl.textContent = error.message;
+  }
+});
+
 // Close modal on outside click
 window.onclick = function(event) {
-  const modal = document.getElementById('artworkModal');
-  if (event.target === modal) {
+  const artworkModal = document.getElementById('artworkModal');
+  const passwordModal = document.getElementById('changePasswordModal');
+  
+  if (event.target === artworkModal) {
     closeArtworkModal();
+  }
+  if (event.target === passwordModal) {
+    closeChangePasswordModal();
   }
 }
 
