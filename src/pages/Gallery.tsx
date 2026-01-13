@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import PaintingCard from '../components/PaintingCard';
 import Modal from '../components/Modal';
 import PaintingDetails from '../components/PaintingDetails';
@@ -16,6 +16,26 @@ interface Painting {
   medium: string;
   size: string;
 }
+
+// Мемоизированный компонент кнопки категории
+const CategoryButton = React.memo<{
+  category: string;
+  isActive: boolean;
+  onClick: (category: string) => void;
+}>(({ category, isActive, onClick }) => {
+  const handleClick = useCallback(() => {
+    onClick(category);
+  }, [category, onClick]);
+
+  return (
+    <button
+      className={`category-btn ${isActive ? 'active' : ''}`}
+      onClick={handleClick}
+    >
+      {category}
+    </button>
+  );
+});
 
 const Gallery: React.FC = () => {
   const [selectedPainting, setSelectedPainting] = useState<Painting | null>(null);
@@ -44,28 +64,30 @@ const Gallery: React.FC = () => {
     }
   };
 
-  const filteredPaintings =
-    selectedCategory === 'Все'
+  // Мемоизация фильтрованных работ
+  const filteredPaintings = useMemo(() => {
+    return selectedCategory === 'Все'
       ? paintings
       : paintings.filter((item) => item.category === selectedCategory);
+  }, [paintings, selectedCategory]);
 
-  const handleCardClick = (id: number) => {
+  const handleCardClick = useCallback((id: number) => {
     const painting = paintings.find((item) => item.id === id);
     if (painting) {
       setSelectedPainting(painting);
     }
-  };
+  }, [paintings]);
 
-  const handleNextPainting = () => {
+  const handleNextPainting = useCallback(() => {
     if (!selectedPainting) return;
     const currentIndex = paintings.findIndex(
       (item) => item.id === selectedPainting.id
     );
     const nextIndex = (currentIndex + 1) % paintings.length;
     setSelectedPainting(paintings[nextIndex]);
-  };
+  }, [selectedPainting, paintings]);
 
-  const handlePreviousPainting = () => {
+  const handlePreviousPainting = useCallback(() => {
     if (!selectedPainting) return;
     const currentIndex = paintings.findIndex(
       (item) => item.id === selectedPainting.id
@@ -73,7 +95,7 @@ const Gallery: React.FC = () => {
     const prevIndex =
       currentIndex === 0 ? paintings.length - 1 : currentIndex - 1;
     setSelectedPainting(paintings[prevIndex]);
-  };
+  }, [selectedPainting, paintings]);
 
   if (loading) {
     return <div className="gallery"><div className="loading">Загрузка...</div></div>;
@@ -83,13 +105,12 @@ const Gallery: React.FC = () => {
     <div className="gallery">
       <div className="category-filter">
         {categories.map((category) => (
-          <button
+          <CategoryButton
             key={category}
-            className={`category-btn ${selectedCategory === category ? 'active' : ''}`}
-            onClick={() => setSelectedCategory(category)}
-          >
-            {category}
-          </button>
+            category={category}
+            isActive={selectedCategory === category}
+            onClick={setSelectedCategory}
+          />
         ))}
       </div>
 

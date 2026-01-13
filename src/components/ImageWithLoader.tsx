@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import './ImageWithLoader.css';
 
 interface ImageWithLoaderProps {
@@ -26,6 +26,36 @@ const ImageWithLoader: React.FC<ImageWithLoaderProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(loading === 'eager');
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // Используем Intersection Observer для ленивой загрузки
+  useEffect(() => {
+    if (loading === 'eager' || shouldLoad) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setShouldLoad(true);
+            observer.disconnect();
+          }
+        });
+      },
+      {
+        rootMargin: '50px', // Загружаем изображения за 50px до видимости
+        threshold: 0.01,
+      }
+    );
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [loading, shouldLoad]);
 
   const handleLoad = useCallback(() => {
     setIsLoading(false);
@@ -37,19 +67,18 @@ const ImageWithLoader: React.FC<ImageWithLoaderProps> = ({
   }, []);
 
   return (
-    <div className="image-with-loader">
-      {isLoading && (
+    <div className="image-with-loader" ref={imgRef}>
+      {isLoading && shouldLoad && (
         <div className="image-loader">
           <div className="loader-spinner"></div>
         </div>
       )}
       {hasError ? (
         <div className="image-error">Не удалось загрузить изображение</div>
-      ) : (
+      ) : shouldLoad ? (
         <img
           src={src}
           alt={alt}
-          loading={loading}
           className={`${className} ${isLoading ? 'loading' : 'loaded'}`}
           style={style}
           onLoad={handleLoad}
@@ -60,6 +89,8 @@ const ImageWithLoader: React.FC<ImageWithLoaderProps> = ({
           onMouseLeave={onMouseLeave}
           decoding="async"
         />
+      ) : (
+        <div className="image-placeholder" />
       )}
     </div>
   );

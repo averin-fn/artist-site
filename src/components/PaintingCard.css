@@ -6,6 +6,9 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease;
   border: 1px solid #f0f0f0;
+  /* Оптимизация производительности */
+  will-change: transform, box-shadow;
+  contain: layout style paint;
 }
 
 .painting-card:hover {

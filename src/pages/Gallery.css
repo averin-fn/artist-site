@@ -39,6 +39,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
+  /* Оптимизация производительности */
+  will-change: transform;
+  contain: layout style paint;
 }
 
 @media (max-width: 1024px) {

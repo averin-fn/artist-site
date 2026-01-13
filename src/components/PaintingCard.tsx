@@ -26,6 +26,7 @@ const PaintingCard: React.FC<PaintingCardProps> = ({ painting, onClick }) => {
           src={painting.image}
           alt={painting.title}
           className="painting-image"
+          loading="lazy"
         />
       </div>
       <div className="painting-info">
@@ -38,4 +39,13 @@ const PaintingCard: React.FC<PaintingCardProps> = ({ painting, onClick }) => {
   );
 };
 
-export default React.memo(PaintingCard);
+export default React.memo(PaintingCard, (prevProps, nextProps) => {
+  // Оптимизированное сравнение для мемоизации
+  return (
+    prevProps.painting.id === nextProps.painting.id &&
+    prevProps.painting.title === nextProps.painting.title &&
+    prevProps.painting.image === nextProps.painting.image &&
+    prevProps.painting.price === nextProps.painting.price &&
+    prevProps.onClick === nextProps.onClick
+  );
+});
