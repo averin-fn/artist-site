@@ -26,6 +26,8 @@ body {
   width: 100%;
   margin: 0 auto;
   padding: 1.5rem 2rem;
+  /* Prevent layout shift during content load */
+  min-height: calc(100vh - 200px);
 }
 
 .app-footer {

@@ -9,6 +9,9 @@
   /* Оптимизация производительности */
   will-change: transform, box-shadow;
   contain: layout style paint;
+  /* Reserve consistent height to prevent CLS */
+  content-visibility: auto;
+  contain-intrinsic-size: 300px 400px;
 }
 
 .painting-card:hover {
@@ -23,6 +26,8 @@
   overflow: hidden;
   background-color: #f8f8f8;
   position: relative;
+  /* Prevent layout shift with fixed aspect ratio */
+  aspect-ratio: 1 / 1;
 }
 
 .painting-image-container .image-with-loader {

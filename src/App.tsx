@@ -19,7 +19,7 @@ const App: React.FC = () => {
         {currentTab === 'about' && <About />}
       </main>
       <footer className="app-footer">
-        <p>&copy; 2024 Галерея Художника. Все права защищены.</p>
+        <p>&copy; 2026 Галерея Художника. Все права защищены.</p>
       </footer>
     </div>
   );
